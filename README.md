@@ -1,4 +1,4 @@
-# チャッ君＠Slack
+# Slack Chat Bot with ChatGPT / ご家庭用のチャッ君
 
 ## ローカルでの起動方法
 

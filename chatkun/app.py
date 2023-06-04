@@ -57,16 +57,20 @@ async def prepare_history(user_id: str, channel: str, thread_ts: str) -> (List[s
     return user_messages, assistant_messages
 
 
-@app.event("app_mention")
-async def llm_reply(event, say):
+@app.event("message")
+async def handle_message_event(message, say):
     # slackからの情報を取得する
-    input_message = event["text"]
-    thread_ts = event.get("thread_ts") or None
-    channel = event["channel"]
-    user_id = event["user"]
+    input_message = message["text"]
+    thread_ts = message.get("thread_ts") or None
+    channel = message["channel"]
+    user_id = message["user"]
 
     log_message = f"receive: channel={channel} user_id={user_id} input_message={input_message}"
     logger.info(log_message)
+
+    # 自分自身の発言は無視する
+    if user_id == os.environ.get("SLACK_BOT_USER_ID"):
+        return
 
     # slack botのIDがメッセージに含まれるので、削除する
     input_message = remove_slack_id_from_text(input_message, SLACK_BOT_ID)
@@ -82,16 +86,16 @@ async def llm_reply(event, say):
 
     # slackのスレッドに返信する
     if thread_ts is not None:
-        parent_thread_ts = event["thread_ts"]
+        parent_thread_ts = message["thread_ts"]
         await say(text=reply_text, thread_ts=parent_thread_ts, channel=channel)
     else:
-        response = await app.client.conversations_replies(channel=channel, ts=event["ts"])
+        response = await app.client.conversations_replies(channel=channel, ts=message["ts"])
         thread_ts = response["messages"][0]["ts"]
         await say(text=reply_text, thread_ts=thread_ts, channel=channel)
 
 
 @api.post("/slack/events")
-async def endpoint(req: Request):
+async def handle_slack_events(req: Request):
     return await handler.handle(req)
 
 
