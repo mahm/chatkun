@@ -1,0 +1,21 @@
+# fly.toml app configuration file generated for chatkun on 2023-06-03T22:14:41+09:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = "chatkun"
+primary_region = "nrt"
+
+[http_service]
+internal_port = 8080
+force_https = false
+auto_stop_machines = true
+auto_start_machines = true
+
+[[services.http_checks]]
+interval = 15000
+grace_period = "30s"
+method = "get"
+path = "/healthcheck"
+protocol = "http"
+timeout = 5000

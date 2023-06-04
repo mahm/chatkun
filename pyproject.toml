@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "chatkun"
+version = "0.1.0"
+description = ""
+authors = ["Masahiro Nishimi <mah@edged-edge.jp>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+openai = "^0.27.7"
+python-dotenv = "^1.0.0"
+slack-bolt = "^1.18.0"
+guidance = "^0.0.61"
+fastapi = "^0.96.0"
+slack-sdk = "^3.21.3"
+gunicorn = "^20.1.0"
+uvicorn = "^0.22.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
