@@ -61,7 +61,13 @@ async def handle_message_event(message, say):
 @api.on_event("startup")
 async def startup_event():
     scheduler = BackgroundScheduler()
-    scheduler.add_job(tweet_job_wrapper, "interval", minutes=60)
+    # 月〜金の日本時間朝6時〜8時、1時間に1回実行
+    scheduler.add_job(tweet_job_wrapper, "cron", day_of_week="mon-fri", hour="21-23", minute="0")
+    # 月〜金の日本時間夜17時〜23時、1時間に1回実行
+    scheduler.add_job(tweet_job_wrapper, "cron", day_of_week="mon-fri", hour="8-14", minute="0")
+    # 土、日の日本時間朝6時〜23時、1時間に1回実行
+    scheduler.add_job(tweet_job_wrapper, "cron", day_of_week="sat-sun", hour="21-23", minute="0")
+    scheduler.add_job(tweet_job_wrapper, "cron", day_of_week="sat-sun", hour="0-14", minute="0")
     scheduler.start()
 
 
