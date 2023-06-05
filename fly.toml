@@ -19,3 +19,8 @@ method = "get"
 path = "/healthcheck"
 protocol = "http"
 timeout = 5000
+port = 8080
+
+[mounts]
+source = "data"
+destination = "/data"

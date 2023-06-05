@@ -13,8 +13,8 @@ cp .env.sample .env
 ### Dockerイメージの作成と起動
 
 ```
-docker build -t chatkun .
-docker run -p 8080:8080 --env-file .env chatkun
+docker-compose build
+docker-compose up
 ngrok http 8080
 ```
 
