@@ -12,15 +12,15 @@ force_https = false
 auto_stop_machines = true
 auto_start_machines = true
 
-[[services.http_checks]]
-interval = 15000
-grace_period = "30s"
-method = "get"
-path = "/healthcheck"
-protocol = "http"
-timeout = 5000
-port = 8080
+#[[services.http_checks]]
+#interval = 15000
+#grace_period = "30s"
+#method = "get"
+#path = "/healthcheck"
+#protocol = "http"
+#timeout = 5000
+#port = 8080
 
 [mounts]
-source = "data"
-destination = "/data"
+source = "app_data"
+destination = "/mnt/data"

@@ -73,8 +73,3 @@ async def handle_slack_events(req: Request):
 @api.get("/healthcheck")
 async def healthcheck():
     return {"status": "OK"}
-
-
-if __name__ == "__main__":
-    logger.info("====starting slack bot====")
-    app.start(port=int(os.environ.get("PORT", 3000)))
