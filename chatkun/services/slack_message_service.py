@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-
+from sqlalchemy import desc
 from chatkun.database import SlackMessage
 
 
@@ -32,7 +32,7 @@ class SlackMessageService:
             messages = session.query(SlackMessage).filter(
                 SlackMessage.created_at >= one_day_ago,
                 SlackMessage.user_id != slack_bot_id,
-            ).all()
+            ).order_by(desc(SlackMessage.created_at)).limit(5).all()
             return messages
         except Exception as e:
             print(f"An error occurred: {e}")

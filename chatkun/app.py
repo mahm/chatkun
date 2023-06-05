@@ -1,10 +1,11 @@
 import os
 import logging
-
+import asyncio
 from dotenv import load_dotenv
 from fastapi import FastAPI, Request
 from slack_bolt.async_app import AsyncApp
 from slack_bolt.adapter.fastapi.async_handler import AsyncSlackRequestHandler
+from apscheduler.schedulers.background import BackgroundScheduler
 
 from chatkun.database import setup_database
 from chatkun.services.bot_service import BotService
@@ -18,6 +19,7 @@ load_dotenv()
 SLACK_BOT_TOKEN = os.environ.get("SLACK_BOT_TOKEN")
 SLACK_SIGNING_SECRET = os.environ.get("SLACK_SIGNING_SECRET")
 SLACK_BOT_ID = os.environ.get("SLACK_BOT_ID")
+SLACK_CHANNEL_ID = os.environ.get("SLACK_CHANNEL_ID")
 DATABASE_URL = os.environ.get("DATABASE_URL")
 
 # データベースの設定
@@ -28,6 +30,17 @@ session_maker = setup_database(DATABASE_URL)
 app = AsyncApp(token=os.environ["SLACK_BOT_TOKEN"], signing_secret=SLACK_SIGNING_SECRET)
 handler = AsyncSlackRequestHandler(app)
 api = FastAPI()
+
+# BotServiceのインスタンスを作成
+bot_service = BotService(session_maker, app, SLACK_BOT_ID)
+
+
+async def tweet_job():
+    await bot_service.tweet(SLACK_CHANNEL_ID)
+
+
+def tweet_job_wrapper():
+    asyncio.run(tweet_job())
 
 
 @app.event("message")
@@ -42,8 +55,14 @@ async def handle_message_event(message, say):
     log_message = f"receive: channel={channel} user_id={user_id} input_message={input_message}"
     logger.info(log_message)
 
-    bot_service = BotService(session_maker, app, say, SLACK_BOT_ID, user_id, channel, ts, thread_ts)
-    await bot_service.do_reply(say, input_message)
+    await bot_service.do_reply(say, input_message, user_id, channel, ts, thread_ts)
+
+
+@api.on_event("startup")
+async def startup_event():
+    scheduler = BackgroundScheduler()
+    scheduler.add_job(tweet_job_wrapper, "interval", minutes=60)
+    scheduler.start()
 
 
 @api.post("/slack/events")
