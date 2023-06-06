@@ -27,7 +27,7 @@ logger.info(f"DATABASE_URL: {DATABASE_URL}")
 session_maker = setup_database(DATABASE_URL)
 
 # Slack APIのクライアントを作成
-app = AsyncApp(token=os.environ["SLACK_BOT_TOKEN"], signing_secret=SLACK_SIGNING_SECRET)
+app = AsyncApp(token=SLACK_BOT_TOKEN, signing_secret=SLACK_SIGNING_SECRET)
 handler = AsyncSlackRequestHandler(app)
 api = FastAPI()
 
