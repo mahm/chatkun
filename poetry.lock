@@ -851,6 +851,20 @@ files = [
 ]
 
 [[package]]
+name = "newsapi-python"
+version = "0.2.7"
+description = "An unofficial Python client for the News API"
+optional = false
+python-versions = "*"
+files = [
+    {file = "newsapi-python-0.2.7.tar.gz", hash = "sha256:a4b66d5dd9892198cdaa476f7542f2625cdd218e5e3121c8f880b2ace717a3c2"},
+    {file = "newsapi_python-0.2.7-py2.py3-none-any.whl", hash = "sha256:11d34013a24d92ca7b7cbdac84ed2d504862b1e22467bc2a9a6913a70962318e"},
+]
+
+[package.dependencies]
+requests = "<3.0.0"
+
+[[package]]
 name = "numpy"
 version = "1.24.3"
 description = "Fundamental package for array computing in Python"
@@ -1572,4 +1586,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "0a442fa984c4d24a9a9cdc498f54564a349d477633709658681eac8cb714dafc"
+content-hash = "9edd6bda724c8d77b5b1918b4564beb86593042ec34e0358912f8d491e7ce878"

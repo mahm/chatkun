@@ -1,12 +1,14 @@
-from typing import List
 from datetime import datetime
 import pytz
 import guidance
+from dotenv import load_dotenv
+
+from chatkun.services.news_service import NewsArticle, NewsService
 
 
 class TweetBot:
-    def __init__(self, recent_messages: List[str]):
-        self.recent_messages = recent_messages
+    def __init__(self, article: NewsArticle):
+        self.article = article
 
     def __call__(self):
         # LLMを設定
@@ -26,21 +28,13 @@ class TweetBot:
         # 会話の生成
         out = bot(
             current_time=now.strftime('%Y-%m-%d %H:%M:%S'),
-            recent_messages=self.recent_messages,
-            empty=(not self.recent_messages)
+            article=self.article.dict()
         )
-        return out['message']
+        return f"{out['message']}\n{article.url}"
 
 
 if __name__ == "__main__":
-    recent_messages = [
-        '今日は暑いね',
-        '昨日は遊園地に行ったよ',
-        '富士山の雪が溶けていたよ'
-    ]
-    print('recent_message: 3')
-    tweet_bot = TweetBot(recent_messages=recent_messages)
-    print(tweet_bot())
-    print('recent_message: 0')
-    tweet_bot = TweetBot(recent_messages=[])
-    print(tweet_bot())
+    load_dotenv()
+    article = NewsService.get_headline()
+    bot = TweetBot(article)
+    print(bot())

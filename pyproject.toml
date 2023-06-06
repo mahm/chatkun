@@ -18,6 +18,7 @@ uvicorn = "^0.22.0"
 sqlalchemy = "^2.0.15"
 apscheduler = "^3.10.1"
 pytz = "^2023.3"
+newsapi-python = "^0.2.7"
 
 
 [build-system]

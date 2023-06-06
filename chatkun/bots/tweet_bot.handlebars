@@ -18,28 +18,29 @@
     現在の日時: {{current_time}}
     """
 {{~/system}}
-{{#if recent_messages}}
+{{#if article}}
     {{#user~}}
-        以下は直近でユーザーが発言した内容です。この内容についてチャッ君として興味深い内容を一つ選択し、興味深さについて抽象化してください。
+        以下は最近のあったテクノロジ関連のニュースです。このニュースでチャッ君が興味深いと思ったことや、小学生がこの記事に関連して知っておくと良いと思ったことについて箇条書きでリストアップしてください。
 
-        ユーザーの発言内容: """
-        {{#each recent_messages}}
-            - {{this}}
-        {{/each}}
+        ニュースの内容: """
+        title: {{article.title}}
+        description: {{article.description}}
+        content: {{article.content}}
+        url: {{article.url}}
         """
     {{/user}}
     {{#assistant~}}
-        {{gen 'planning' max_tokens=200}}
+        {{gen 'planning' max_tokens=1000}}
     {{~/assistant}}
     {{#user~}}
-        興味深かった内容について小学生が興味を持つよう、チャッ君として理解できるように話してください。
+        リストアップした内容が専門知識のない人にも伝わるよう、140字以内で面白く話してください。
     {{/user}}
 {{/if}}
-{{#if empty}}
+{{#unless article}}
     {{#user~}}
-        何か面白いことを話してください。
+        チャッ君として、勉強が捗るChatGPTの活用法について140字以内で面白く教えて下さい。
     {{/user}}
-{{/if}}
+{{/unless}}
 {{#assistant~}}
     {{gen 'message' max_tokens=1000 temperature=0.7}}
 {{~/assistant}}
