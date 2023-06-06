@@ -19,8 +19,8 @@ class ConversationBot:
         # LLMを設定
         gpt = guidance.llms.OpenAI('gpt-3.5-turbo')
 
-        # プロンプトを読み込み
-        with open("./chatkun/chatbot.handlebars", "r") as f:
+        # プロンプトの読み込み
+        with open("./chatkun/bots/conversation_bot.handlebars", "r") as f:
             prompt = f.read()
 
         # 関数の生成
