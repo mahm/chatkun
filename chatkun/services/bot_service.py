@@ -2,6 +2,7 @@ from typing import List
 
 from chatkun.bots.conversation_bot import ConversationBot
 from chatkun.bots.tweet_bot import TweetBot
+from chatkun.services.news_service import NewsService
 from chatkun.services.slack_message_service import SlackMessageService
 
 
@@ -79,9 +80,7 @@ class BotService:
         await say(text=reply_text, thread_ts=thread_ts, channel=channel)
 
     async def tweet(self, channel_id: str) -> None:
-        # 直近のメッセージを取得
-        messages = self.slack_message_service.get_recent_messages(slack_bot_id=self.slack_bot_id)
-        texts = [message.text for message in messages]
-        bot = TweetBot(recent_messages=texts)
+        article = NewsService.get_headline()
+        bot = TweetBot(article)
         bot_message = bot()
         await self.slack_app.client.chat_postMessage(channel=channel_id, text=bot_message)
