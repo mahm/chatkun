@@ -30,7 +30,7 @@ class TweetBot:
             current_time=now.strftime('%Y-%m-%d %H:%M:%S'),
             article=self.article.dict()
         )
-        return f"{out['message']}\n{article.url}"
+        return f"{out['message']}\n{self.article.url}"
 
 
 if __name__ == "__main__":
